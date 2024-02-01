@@ -1,0 +1,10 @@
+{
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
+    "editor.minimap.enabled": false,
+    "editor.quickSuggestions": {
+        "strings": "on"
+    },
+    "editor.tabSize": 2
+}
