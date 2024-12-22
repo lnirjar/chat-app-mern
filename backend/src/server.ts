@@ -1,3 +1,7 @@
+// eslint-disable-next-line @typescript-eslint/triple-slash-reference
+/// <reference path="../types/express.d.ts" />
+// using the triple slash reference because of ts-node https://github.com/TypeStrong/ts-node?tab=readme-ov-file#missing-types
+
 import "dotenv/config";
 import chalk from "chalk";
 
