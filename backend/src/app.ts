@@ -10,7 +10,7 @@ const app = express();
 if (process.env.NODE_ENV === "production") {
   app.use(morgan(format.short));
 } else {
-  app.use(morgan("dev"));
+  app.use(morgan(format.dev));
 }
 
 app.use(express.json());

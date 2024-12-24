@@ -35,8 +35,8 @@ export const errorHandler: ErrorRequestHandler = (
 
   const stack = err instanceof Error ? err.stack : null;
 
-  if (!isHttpError(err)) {
-    console.error(err);
+  if (!isHttpError(err) || statusCode === 500) {
+    res.locals.error = { message, stack };
   }
 
   res.status(statusCode).json({
