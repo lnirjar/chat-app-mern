@@ -1,11 +1,22 @@
 import path from "path";
 import express from "express";
 import cookieParser from "cookie-parser";
+import passport from "passport";
+import session from "express-session";
+
 import { errorHandler, notFound } from "./middlewares/error.middleware";
 import { format, morgan } from "./middlewares/morgan.middleware";
 import { apiRoutes } from "./routes/index.routes";
+import { configurePassport } from "./config/passport";
+import { sessionOptions } from "./config/session";
 
 const app = express();
+
+if (process.env.NODE_ENV === "production") {
+  app.set("trust proxy", true);
+}
+
+configurePassport(passport);
 
 if (process.env.NODE_ENV === "production") {
   app.use(morgan(format.short));
@@ -17,6 +28,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use(cookieParser());
+
+app.use(session(sessionOptions));
+
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use("/api", apiRoutes);
 

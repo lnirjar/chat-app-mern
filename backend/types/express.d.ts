@@ -1,11 +1,9 @@
 import { Document } from "mongoose";
-import { User } from "../src/models/user.model";
+import { User as UserType } from "../src/models/user.model";
 
 declare global {
   namespace Express {
-    interface Request {
-      // eslint-disable-next-line @typescript-eslint/no-empty-object-type
-      user: User & Document<unknown, {}, User>;
-    }
+    // eslint-disable-next-line @typescript-eslint/no-empty-object-type
+    interface User extends UserType, Document<unknown, {}, UserType> {}
   }
 }
