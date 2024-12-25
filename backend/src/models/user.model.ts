@@ -20,8 +20,9 @@ const userSchema = new Schema(
       unique: true,
       select: false,
     },
-    password: { type: String, required: true, select: false },
+    password: { type: String, select: false },
     lastPasswordChange: { type: Date, default: Date.now, select: false },
+    googleId: { type: String, select: false },
   },
   { timestamps: true },
 );
@@ -31,3 +32,6 @@ export type User = InferSchemaType<typeof userSchema> & {
 };
 
 export const User = mongoose.model("User", userSchema);
+
+export const USER_SELECT_ALL_FIELDS =
+  "+password +email +lastPasswordChange +googleId";

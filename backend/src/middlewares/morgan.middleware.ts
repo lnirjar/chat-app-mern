@@ -1,6 +1,6 @@
 import chalk from "chalk";
-import { Request } from "express";
 import morgan from "morgan";
+import { Request, Response } from "express";
 
 morgan.token("remote-user", (req: Request) =>
   req.user ? req.user.email : "-",
@@ -15,7 +15,13 @@ morgan.token("color-status", (req, res) => {
   return chalk.white(status);
 });
 
-export const short = [
+morgan.token("error", (req: Request, res: Response) =>
+  res.locals.error?.message && res.locals.error?.stack
+    ? `\n${chalk.bgRed("Error:")} ${res.locals.error.message}\n${res.locals.error.stack}\n`
+    : "",
+);
+
+const short = [
   chalk.yellow(":remote-addr"),
   ":remote-user",
   chalk.yellow(":method"),
@@ -25,8 +31,18 @@ export const short = [
   chalk.grey(":res[content-length]"),
   "-",
   ":response-time ms",
+  ":error",
 ].join(" ");
 
-const format = { short };
+const dev = [
+  chalk.yellow(":method"),
+  chalk.green(":url"),
+  ":color-status",
+  ":response-time ms",
+  chalk.grey(":res[content-length]"),
+  ":error",
+].join(" ");
+
+const format = { short, dev };
 
 export { morgan, format };
