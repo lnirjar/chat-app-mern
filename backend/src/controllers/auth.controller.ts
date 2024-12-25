@@ -8,6 +8,7 @@ import { User } from "../models/user.model";
 import { SessionModel } from "../models/session.model";
 import { getAvatarWithInitials } from "../utils/avatar.utils";
 import { getLoginMethods, LoginMethods } from "../utils/loginMethods.utils";
+import { AVATARS_FOLDER, deleteFromCloudinary } from "../config/cloudinary";
 
 // @desc Google Auth Callback
 // @route POST /api/auth/google/callback
@@ -267,7 +268,20 @@ export const deleteAccount: RequestHandler<
     throw new createHttpError.NotFound("User not found");
   }
 
-  // TODO: Delete avatar from cloudinary
+  // Delete avatar from cloudinary
+  const avatarPublicId = `${AVATARS_FOLDER}/avatar-${user.id}`;
+  try {
+    deleteFromCloudinary(avatarPublicId, {
+      invalidate: true,
+    });
+  } catch (error) {
+    let message = `Something went wrong while deleting avatar\npublic_id: ${avatarPublicId}`;
+    if (error instanceof Error) {
+      message += `\n${error.message}`;
+    }
+
+    console.error(new Error(message));
+  }
 
   const userObj: Partial<User> = deletedUser.toObject();
 
