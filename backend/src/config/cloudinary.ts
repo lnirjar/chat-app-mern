@@ -6,9 +6,6 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-export const uploadOnCloudinary = cloudinary.uploader.upload;
-export const deleteFromCloudinary = cloudinary.uploader.destroy;
-
 // Constants
 export const UPLOAD_PRESETS = {
   CHAT_APP_MERN_AVATARS: "chat-app-mern-avatars",
