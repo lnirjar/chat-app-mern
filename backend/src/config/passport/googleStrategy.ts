@@ -1,8 +1,12 @@
 import createHttpError from "http-errors";
 import { PassportStatic } from "passport";
 import { Strategy as GoogleStrategy } from "passport-google-oauth20";
+import { UploadApiResponse } from "cloudinary";
+import mongoose from "mongoose";
 
 import { User, USER_SELECT_ALL_FIELDS } from "../../models/user.model";
+import { uploadAvatarToCloudinary } from "../../utils/cloudinary.utils";
+import { getAvatarWithInitials } from "../../utils/avatar.utils";
 
 export const configureGoogleStrategy = (passport: PassportStatic) => {
   const clientID = process.env.GOOGLE_CLIENT_ID;
@@ -36,29 +40,44 @@ export const configureGoogleStrategy = (passport: PassportStatic) => {
       },
       async (accessToken, refreshToken, profile, done) => {
         try {
-          let user = await User.findOne({ googleId: profile.id })
+          const existingUser = await User.findOne({ googleId: profile.id })
             .select(USER_SELECT_ALL_FIELDS)
             .exec();
 
-          if (!user) {
-            const email = profile.emails?.[0].value;
-            const avatar = profile.photos?.[0].value;
-
-            if (!email) {
-              throw new createHttpError.InternalServerError(
-                "No email found in the Google profile (Google OAuth)",
-              );
-            }
-
-            // TODO: Save the avatar in cloudinary
-
-            user = await User.create({
-              googleId: profile.id,
-              name: profile.displayName,
-              email,
-              avatar,
-            });
+          if (existingUser) {
+            return done(null, existingUser);
           }
+
+          const email = profile.emails?.[0].value;
+          const googleAvatar = profile.photos?.[0].value;
+
+          if (!email) {
+            throw new createHttpError.InternalServerError(
+              "No email found in the Google profile (Google OAuth)",
+            );
+          }
+
+          const _id = new mongoose.Types.ObjectId();
+
+          // Save the avatar in cloudinary
+          let uploadResult: UploadApiResponse | undefined;
+          if (googleAvatar) {
+            const avatarUrl = googleAvatar.split("=")[0] + "=s512-c";
+            uploadResult = await uploadAvatarToCloudinary(
+              avatarUrl,
+              _id.toString(),
+            );
+          }
+
+          const user = await User.create({
+            _id,
+            googleId: profile.id,
+            name: profile.displayName,
+            email,
+            avatar: googleAvatar
+              ? uploadResult?.secure_url
+              : getAvatarWithInitials(profile.displayName),
+          });
 
           return done(null, user);
         } catch (error) {

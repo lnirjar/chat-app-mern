@@ -8,6 +8,7 @@ import { User } from "../models/user.model";
 import { SessionModel } from "../models/session.model";
 import { getAvatarWithInitials } from "../utils/avatar.utils";
 import { getLoginMethods, LoginMethods } from "../utils/loginMethods.utils";
+import { deleteAvatarFromCloudinary } from "../utils/cloudinary.utils";
 
 // @desc Google Auth Callback
 // @route POST /api/auth/google/callback
@@ -176,8 +177,6 @@ export const changePassword: RequestHandler<
     "session.passport.user": user._id,
   });
 
-  // TODO: re-login the current user
-
   req.logOut((error) => {
     if (error) {
       return next(error);
@@ -267,7 +266,7 @@ export const deleteAccount: RequestHandler<
     throw new createHttpError.NotFound("User not found");
   }
 
-  // TODO: Delete avatar from cloudinary
+  await deleteAvatarFromCloudinary(user.id);
 
   const userObj: Partial<User> = deletedUser.toObject();
 
