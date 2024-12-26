@@ -177,8 +177,6 @@ export const changePassword: RequestHandler<
     "session.passport.user": user._id,
   });
 
-  // TODO: re-login the current user
-
   req.logOut((error) => {
     if (error) {
       return next(error);
