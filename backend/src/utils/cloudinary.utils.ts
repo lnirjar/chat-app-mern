@@ -13,11 +13,16 @@ const uploadToCloudinary = async (
 ): Promise<UploadApiResponse> => {
   try {
     const uploadResult = await upload(filePath, options);
-    await unlink(filePath);
+
+    if (!filePath.startsWith("http")) {
+      await unlink(filePath);
+    }
 
     return uploadResult;
   } catch (error) {
-    await unlink(filePath);
+    if (!filePath.startsWith("http")) {
+      await unlink(filePath);
+    }
 
     const message =
       error instanceof Error
