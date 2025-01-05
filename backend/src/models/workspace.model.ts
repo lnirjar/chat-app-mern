@@ -5,7 +5,7 @@ const workspaceSchema = new Schema(
     name: { type: String, trim: true, required: true },
     members: [
       {
-        userId: {
+        user: {
           type: Schema.Types.ObjectId,
           ref: "User",
           required: true,
