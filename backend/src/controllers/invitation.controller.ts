@@ -13,7 +13,7 @@ export const createInvitation: RequestHandler<
   unknown,
   {
     workspaceId: string;
-    inviteType?: string;
+    inviteType?: "public" | "private";
     expiresAt?: Date;
     invitees?: string[];
   },
