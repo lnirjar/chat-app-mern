@@ -98,6 +98,7 @@ export const updateWorkspaceName: RequestHandler<
   const updatedWorkspace = await Workspace.findOneAndUpdate(
     { _id: workspaceId, members: { $elemMatch: { user: user?._id } } },
     { name },
+    { new: true },
   ).exec();
 
   if (updatedWorkspace) {
@@ -213,6 +214,7 @@ export const removeMemberFromWorkspace: RequestHandler<
         members: { user: memberId, role: { $ne: "owner" } },
       },
     },
+    { new: true },
   ).exec();
 
   if (!updatedWorkspace) {
