@@ -3,7 +3,9 @@ import asyncHandler from "express-async-handler";
 import createHttpError from "http-errors";
 
 import { Workspace } from "../models/workspace.model";
-import { validateInvitation } from "../utils/invitation.utils";
+import { Invitation } from "../models/invitation.model";
+import * as workspaceUtils from "../utils/workspace.utils";
+import * as invitationUtils from "../utils/invitation.utils";
 
 // @desc Create Workspace
 // @route POST /api/workspaces
@@ -131,7 +133,10 @@ export const joinWorkspace: RequestHandler<
     throw new createHttpError.InternalServerError("User not found");
   }
 
-  const invitation = await validateInvitation(inviteId, user.email);
+  const invitation = await invitationUtils.validateInvitation(
+    inviteId,
+    user.email,
+  );
 
   const workspaceId = invitation.workspaceId;
 
@@ -269,4 +274,36 @@ export const changeMemberRole: RequestHandler<
   res
     .status(200)
     .json({ workspace: updatedWorkspace, message: "Role changed" });
+});
+
+// @desc Get Invitations for a Workspace
+// @route GET /api/workspaces/:workspaceId/invitations
+// @access Private
+export const getInvitations: RequestHandler<
+  { workspaceId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { workspaceId } = req.params;
+
+  if (!user) {
+    throw new createHttpError.InternalServerError("User is required");
+  }
+
+  const { userIsMember } = await workspaceUtils.isUserMemberOfWorkspace(
+    workspaceId,
+    user,
+  );
+
+  if (!userIsMember) {
+    throw new createHttpError.Forbidden(
+      "Only the members of the workspace can get the invitation details",
+    );
+  }
+
+  const invitations = await Invitation.find({ workspaceId }).exec();
+
+  res.status(200).json({ invitations });
 });
