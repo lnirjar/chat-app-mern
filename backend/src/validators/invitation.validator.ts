@@ -25,7 +25,11 @@ export const createInvitation: RequestHandler<
     inviteType: z.enum(["public", "private"]).optional(),
     expiresAt: z.date({ message: "expiresAt must be a date" }).optional(),
     invitees: z
-      .array(z.string({ message: "invitees must be an array of string" }))
+      .array(
+        z
+          .string({ message: "invitees must be an array of emails" })
+          .email({ message: "invitees must be an array of emails" }),
+      )
       .optional(),
   });
 
