@@ -6,7 +6,14 @@ import { Types } from "mongoose";
 import { Chat } from "../models/chat.model";
 import * as workspaceUtils from "../utils/workspace.utils";
 import * as chatUtils from "../utils/chat.utils";
-import { ChatType, MEMBER, OWNER, Visibility } from "../utils/constants";
+import {
+  ChatType,
+  DM,
+  MEMBER,
+  OWNER,
+  PRIVATE,
+  Visibility,
+} from "../utils/constants";
 
 // @desc Create Chat
 // @route POST /api/chats
@@ -43,7 +50,7 @@ export const createChat: RequestHandler<
   const chat = await Chat.create({
     workspaceId,
     name,
-    visibility,
+    visibility: chatType === DM ? PRIVATE : visibility,
     chatType,
     members: { user: user._id, role: OWNER },
   });
@@ -184,7 +191,7 @@ export const removeMember: RequestHandler<
 
   const updatedChat = await Chat.findByIdAndUpdate(
     chatId,
-    { $pull: { members: memberId } },
+    { $pull: { members: { user: memberId } } },
     { new: true },
   );
 

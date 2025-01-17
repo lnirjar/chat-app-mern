@@ -128,6 +128,7 @@ export const addMembers: RequestHandler<
       }),
     members: z.array(
       z.string({ message: "Members must be an array of string" }),
+      { message: "Members is required" },
     ),
   });
 
