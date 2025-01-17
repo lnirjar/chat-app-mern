@@ -6,6 +6,7 @@ import { Workspace } from "../models/workspace.model";
 import { Invitation } from "../models/invitation.model";
 import * as workspaceUtils from "../utils/workspace.utils";
 import * as invitationUtils from "../utils/invitation.utils";
+import { Chat } from "../models/chat.model";
 
 // @desc Create Workspace
 // @route POST /api/workspaces
@@ -306,4 +307,36 @@ export const getInvitations: RequestHandler<
   const invitations = await Invitation.find({ workspaceId }).exec();
 
   res.status(200).json({ invitations });
+});
+
+// @desc Get Invitations for a Workspace
+// @route GET /api/workspaces/:workspaceId/chats
+// @access Private
+export const getChats: RequestHandler<
+  { workspaceId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { workspaceId } = req.params;
+
+  if (!user) {
+    throw new createHttpError.InternalServerError("User is required");
+  }
+
+  const { userIsMember } = await workspaceUtils.isUserMemberOfWorkspace(
+    workspaceId,
+    user,
+  );
+
+  if (!userIsMember) {
+    throw new createHttpError.Forbidden(
+      "Only the members of the workspace can get the chats",
+    );
+  }
+
+  const chats = await Chat.find({ workspaceId }).exec();
+
+  res.status(200).json({ chats });
 });

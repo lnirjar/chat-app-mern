@@ -76,6 +76,31 @@ export const getInvitations: RequestHandler<
   next();
 });
 
+export const getChats: RequestHandler<
+  { workspaceId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res, next) => {
+  const validationSchema = z.object({
+    workspaceId: z
+      .string({ message: "Workspace id is required" })
+      .trim()
+      .min(1, { message: "Workspace id is required" })
+      .max(50, {
+        message: "Workspace id can not contain more than 50 characters",
+      }),
+  });
+
+  const result = validationSchema.safeParse(req.params);
+
+  if (!result.success) {
+    throw new createHttpError.BadRequest(result.error.issues[0].message);
+  }
+
+  next();
+});
+
 export const getUserWorkspaces: RequestHandler<
   unknown,
   unknown,

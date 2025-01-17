@@ -25,6 +25,10 @@ router
   .get(workspaceValidator.getInvitations, workspaceController.getInvitations);
 
 router
+  .route("/:workspaceId/chats")
+  .get(workspaceValidator.getChats, workspaceController.getChats);
+
+router
   .route("/:workspaceId/name")
   .patch(
     workspaceValidator.updateWorkspaceName,
