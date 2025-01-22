@@ -4,18 +4,26 @@
 
 import "dotenv/config";
 import chalk from "chalk";
+import { createServer } from "node:http";
+import { Server } from "socket.io";
 
 import { connectDB } from "./config/db";
 import { app } from "./app";
+import { configureSocketIO } from "./config/socket";
+
+const server = createServer(app);
+const io = new Server(server);
 
 connectDB()
   .then(() => {
     const port = process.env.PORT || 5000;
-    app.listen(port, () => {
+    server.listen(port, () => {
       console.log(
         chalk.bgYellowBright("Server Status:"),
         `listening on port ${port}`,
       );
+
+      configureSocketIO(io);
     });
   })
   .catch((error) => {
