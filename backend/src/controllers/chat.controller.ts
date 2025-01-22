@@ -4,6 +4,7 @@ import createHttpError from "http-errors";
 import { Types } from "mongoose";
 
 import { Chat } from "../models/chat.model";
+import { Message } from "../models/message.model";
 import * as workspaceUtils from "../utils/workspace.utils";
 import * as chatUtils from "../utils/chat.utils";
 import {
@@ -94,6 +95,35 @@ export const getChatDetails: RequestHandler<
   }
 
   res.status(200).json({ chat });
+});
+
+// @desc Get Chat Messages
+// @route GET /api/chats/:chatId/messages
+// @access Private
+export const getChatMessages: RequestHandler<
+  { chatId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { chatId } = req.params;
+
+  if (!user) {
+    throw new createHttpError.InternalServerError("User not found");
+  }
+
+  const { userIsChatMember } = await chatUtils.isUserMemberOfChat(chatId, user);
+
+  if (!userIsChatMember) {
+    throw new createHttpError.Forbidden(
+      "Only the members of the chat can send or receive messages",
+    );
+  }
+
+  const messages = await Message.find({ chatId }).populate("sender");
+
+  res.status(200).json({ messages });
 });
 
 // @desc Update Chat

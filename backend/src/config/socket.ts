@@ -4,7 +4,13 @@ import { NextFunction, Request, RequestHandler, Response } from "express";
 import passport from "passport";
 
 import { sessionOptions } from "./session";
-import { Message } from "../models/message.model";
+import * as messageController from "../controllers/message.controller";
+import {
+  DELETE_MESSAGE,
+  EDIT_MESSAGE,
+  JOIN_CHAT_ROOM,
+  SEND_MESSAGE,
+} from "../utils/constants";
 
 function onlyForHandshake(middleware: RequestHandler) {
   return (
@@ -42,23 +48,20 @@ export const configureSocketIO = (io: Server) => {
       `A user connected:\n  socketId: ${socket.id}\n  userId: ${user?.id}`,
     );
 
-    socket.on("join_chat", (chatId) => {
-      socket.join(chatId);
-      console.log(`User joined room: ${chatId}`);
+    socket.on(JOIN_CHAT_ROOM, async (data) => {
+      await messageController.joinChatRoom(socket, data, user);
     });
 
-    socket.on("send_message", async (data) => {
-      const { chatId, text, attachment } = data;
-      const message = await Message.create({
-        chatId,
-        sender: user?.id,
-        text,
-        attachment,
-      });
+    socket.on(SEND_MESSAGE, async (data) => {
+      await messageController.sendMessage(io, data, user);
+    });
 
-      console.log(message);
+    socket.on(EDIT_MESSAGE, async (data) => {
+      await messageController.editMessage(io, data, user);
+    });
 
-      io.to(chatId).emit("receive_message", message);
+    socket.on(DELETE_MESSAGE, async (data) => {
+      await messageController.deleteMessage(io, data, user);
     });
 
     socket.on("disconnect", () => {

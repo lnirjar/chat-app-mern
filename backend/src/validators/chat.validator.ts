@@ -75,6 +75,31 @@ export const getChatDetails: RequestHandler<
   next();
 });
 
+export const getChatMessages: RequestHandler<
+  { chatId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res, next) => {
+  const validationSchema = z.object({
+    chatId: z
+      .string({ message: "Chat id is required" })
+      .trim()
+      .min(1, { message: "Chat id is required" })
+      .max(50, {
+        message: "Chat id can not contain more than 50 characters",
+      }),
+  });
+
+  const result = validationSchema.safeParse(req.params);
+
+  if (!result.success) {
+    throw new createHttpError.BadRequest(result.error.issues[0].message);
+  }
+
+  next();
+});
+
 export const updateChat: RequestHandler<
   { chatId: string },
   unknown,

@@ -17,6 +17,10 @@ router
   .delete(chatValidator.deleteChat, chatController.deleteChat);
 
 router
+  .route("/:chatId/messages")
+  .get(chatValidator.getChatMessages, chatController.getChatMessages);
+
+router
   .route("/:chatId/members")
   .post(chatValidator.addMembers, chatController.addMembers);
 
