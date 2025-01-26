@@ -37,6 +37,6 @@ router
 
 router
   .route("/delete-account")
-  .delete(authValidator.deleteAccount, authController.deleteAccount);
+  .post(authValidator.deleteAccount, authController.deleteAccount);
 
 export { router as authRoutes };
