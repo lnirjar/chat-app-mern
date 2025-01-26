@@ -8,7 +8,7 @@ interface ChangePasswordFormResponse {
 }
 const changePassword = (data: ChangePasswordFormData) => {
   return axiosInstance.patch<ChangePasswordFormResponse>(
-    "/api/auth/password",
+    "/api/auth/change-password",
     data,
   );
 };
