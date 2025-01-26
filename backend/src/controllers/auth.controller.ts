@@ -4,7 +4,7 @@ import asyncHandler from "express-async-handler";
 import createHttpError from "http-errors";
 import bcrypt from "bcryptjs";
 
-import { User } from "../models/user.model";
+import { User, USER_SELECT_ALL_FIELDS } from "../models/user.model";
 import { SessionModel } from "../models/session.model";
 import { getAvatarWithInitials } from "../utils/avatar.utils";
 import { getLoginMethods, LoginMethods } from "../utils/loginMethods.utils";
@@ -165,7 +165,7 @@ export const changePassword: RequestHandler<
     { password: hashedPassword, lastPasswordChange },
     { new: true },
   )
-    .select("+lastPasswordChange")
+    .select(USER_SELECT_ALL_FIELDS)
     .exec();
 
   if (!updatedUser) {
@@ -182,9 +182,22 @@ export const changePassword: RequestHandler<
       return next(error);
     }
 
-    res.status(200).json({
-      message:
-        "Password changed successfully. Logged out from all sessions. Please login again.",
+    req.logIn(updatedUser, (error) => {
+      if (error) {
+        return next(error);
+      }
+
+      const userObj = updatedUser.toObject();
+      const loginMethods = getLoginMethods(userObj);
+      delete userObj.googleId;
+      delete userObj.password;
+
+      res.status(200).json({
+        user: userObj,
+        loginMethods,
+        message:
+          "Password changed successfully. Logged out from all sessions except the current session.",
+      });
     });
   });
 });
