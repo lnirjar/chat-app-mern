@@ -29,7 +29,7 @@ import { authActions } from "@/slices/authSlice";
 import { ApiError } from "@/config/axios";
 import { isEmailAvailable } from "@/api/userApi";
 
-import { TOAST_MESSAGES } from "@/lib/constants";
+import { APP_NAME, TOAST_MESSAGES } from "@/lib/constants";
 import { cacheLastResult, debounceAsync } from "@/lib/utils";
 
 const debouncedCachedIsEmailAvailable = debounceAsync(
@@ -119,7 +119,7 @@ export const SignupPage = () => {
   return (
     <>
       <Helmet>
-        <title>Signup | Chat App</title>
+        <title>Signup | {APP_NAME}</title>
       </Helmet>
       <div className="w-96 mx-auto my-8">
         <Card>

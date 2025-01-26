@@ -46,3 +46,5 @@ export const TOAST_MESSAGES = {
   DELETE_ACCOUNT_ERROR: "Failed to delete your account. Please try again.",
   DELETE_ACCOUNT_ERROR_INVALID_PASSWORD: "Invalid Password. Please try again.",
 };
+
+export const APP_NAME = "Chat App (MERN)";
