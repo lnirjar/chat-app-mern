@@ -1,0 +1,14 @@
+{
+  "name": "chat-app-mern",
+  "version": "1.0.0",
+  "description": "Chat App using MERN Stack and Socket.io",
+  "main": "backend/dist/server.js",
+  "scripts": {
+    "start": "npm start --prefix backend",
+    "build:production": "npm run build:frontend:production && npm run build:backend:production",
+    "build:frontend:production": "cd frontend && npm run build:production",
+    "build:backend:production": "cd backend && npm run build:production"
+  },
+  "author": "Nirjar Lohakare (https://github.com/lnirjar)",
+  "license": "ISC"
+}
