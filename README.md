@@ -11,6 +11,7 @@ https://starter-mern-ts-jwt.onrender.com
 - MongoDB
 - Mongoose
 - Passport.js
+- Multer
 - Socket.io
 - TypeScript
 - Zod
