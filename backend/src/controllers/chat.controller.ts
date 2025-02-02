@@ -136,9 +136,16 @@ export const getChatDetails: RequestHandler<
     throw new createHttpError.InternalServerError("User not found");
   }
 
-  const { userIsChatMember, chat } = await chatUtils.isUserMemberOfChat(
-    chatId,
-    user,
+  const chat = await Chat.findById(chatId)
+    .populate("members.user", "name")
+    .exec();
+
+  if (!chat) {
+    throw new createHttpError.NotFound("Chat not found");
+  }
+
+  const userIsChatMember = chat.members.find(
+    (member) => member.user._id.toString() === user._id.toString(),
   );
 
   if (!userIsChatMember && chat.visibility === PRIVATE) {
