@@ -61,6 +61,7 @@ export const LoginPage = () => {
   async function onSubmit(values: z.infer<typeof formSchema>) {
     const result = mutation.mutateAsync(values, {
       onSuccess: (data) => {
+        window.location.reload();
         dispatch(authActions.setUser(data.data.user));
       },
       onError: (error: ApiError) => {

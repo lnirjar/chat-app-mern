@@ -45,6 +45,56 @@ export const TOAST_MESSAGES = {
   DELETE_ACCOUNT_SUCCESS: "Your account has been deleted.",
   DELETE_ACCOUNT_ERROR: "Failed to delete your account. Please try again.",
   DELETE_ACCOUNT_ERROR_INVALID_PASSWORD: "Invalid Password. Please try again.",
+
+  // Workspace
+  CREATE_WORKSPACE_LOADING: "Creating Workspace...",
+  CREATE_WORKSPACE_SUCCESS: "Your workspace has been created.",
+  CREATE_WORKSPACE_ERROR: "Failed to create your workspace. Please try again.",
+
+  // Join Workspace
+  JOIN_WORKSPACE_LOADING: "Joining Workspace...",
+  JOIN_WORKSPACE_SUCCESS: "You've joined the workspace.",
+  JOIN_WORKSPACE_ERROR: "Failed to join the workspace. Please try again.",
+
+  // Chat
+  CREATE_CHAT_LOADING: "Creating Chat...",
+  CREATE_CHAT_SUCCESS: "Your chat has been created.",
+  CREATE_CHAT_ERROR: "Failed to create your chat. Please try again.",
+
+  // Invitaion
+  CREATE_INVITATION_LOADING: "Creating Invitaion...",
+  CREATE_INVITATION_SUCCESS: "Your invitaiton has been created.",
+  CREATE_INVITATION_ERROR:
+    "Failed to create your invitaiton. Please try again.",
+
+  // Delete Invitation
+  DELETE_INVITATION_LOADING: "Deleting Invitation...",
+  DELETE_INVITATION_SUCCESS: "Your invitation has been deleted.",
+  DELETE_INVITATION_ERROR:
+    "Failed to delete your invitation. Please try again.",
 };
 
 export const APP_NAME = "Chat App (MERN)";
+
+export const MEMBER = "member";
+export const OWNER = "owner";
+export const ADMIN = "admin";
+export type MemberRole = typeof MEMBER | typeof OWNER | typeof ADMIN;
+
+export const PUBLIC = "public";
+export const PRIVATE = "private";
+export type Visibility = typeof PUBLIC | typeof PRIVATE;
+
+export const GROUP = "group";
+export const DM = "dm";
+export type ChatType = typeof GROUP | typeof DM;
+
+export const SENT = "sent";
+export const RECEIVED = "received";
+export type MessageType = typeof SENT | typeof RECEIVED;
+
+export const SEND_MESSAGE = "send_message";
+export const RECEIVE_MESSAGE = "receive_message";
+export const EDIT_MESSAGE = "edit_message";
+export const DELETE_MESSAGE = "delete_message";
+export const JOIN_CHAT_ROOM = "join_chat_room";

@@ -58,6 +58,10 @@ export const getUser = asyncHandler(async (req, res, next) => {
   next();
 });
 
+export const getUserData = asyncHandler(async (req, res, next) => {
+  next();
+});
+
 export const updateAvatar = asyncHandler(async (req, res, next) => {
   const file = req.file;
   if (!file) {

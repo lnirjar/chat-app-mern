@@ -37,7 +37,7 @@ router
 
 router
   .route("/join/:inviteId")
-  .get(workspaceValidator.joinWorkspace, workspaceController.joinWorkspace);
+  .post(workspaceValidator.joinWorkspace, workspaceController.joinWorkspace);
 
 router
   .route("/:workspaceId/leave")

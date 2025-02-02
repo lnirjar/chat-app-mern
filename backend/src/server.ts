@@ -12,7 +12,18 @@ import { app } from "./app";
 import { configureSocketIO } from "./config/socket";
 
 const server = createServer(app);
-const io = new Server(server);
+
+const opts =
+  process.env.NODE_ENV === "production"
+    ? {}
+    : {
+        cors: {
+          origin: "http://localhost:5173",
+          methods: ["GET", "POST"],
+          credentials: true,
+        },
+      };
+const io = new Server(server, opts);
 
 connectDB()
   .then(() => {

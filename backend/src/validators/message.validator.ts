@@ -19,8 +19,8 @@ export const sendMessage = (data: {
         .string({ message: "Message text must be a string" })
         .trim()
         .min(1, { message: "Message text is required" })
-        .max(100, {
-          message: "Message text can contain maximum 100 characters",
+        .max(2000, {
+          message: "Message text can contain maximum 2000 characters",
         })
         .optional(),
       attachment: z

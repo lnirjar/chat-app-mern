@@ -3,7 +3,6 @@ import { NavLink } from "react-router-dom";
 import reactLogo from "@/assets/react.svg";
 
 import { Button } from "@/components/ui/button";
-import { AvatarDropdownMenu } from "@/components/AvatarDropdownMenu";
 import { ModeToggle } from "@/components/mode-toggle";
 
 import { useAppSelector } from "@/hooks/react-redux-hooks";
@@ -18,31 +17,6 @@ export const Navbar = () => {
           <img src={reactLogo} className="logo react" alt="React logo" />
         </NavLink>
       </div>
-
-      {user && (
-        <>
-          <div className="ml-24 flex gap-8 items-center">
-            <div className="flex gap-4">
-              <NavLink
-                to="/dashboard"
-                className="[&.active]:underline decoration-2 decoration-accent-foreground underline-offset-8 animate-fade-in"
-              >
-                Dashboard
-              </NavLink>
-              <NavLink
-                to="/reports"
-                className="[&.active]:underline decoration-2 decoration-accent-foreground underline-offset-8 animate-fade-in"
-              >
-                Reports
-              </NavLink>
-            </div>
-            <ModeToggle />
-          </div>
-          <div className="ml-auto">
-            <AvatarDropdownMenu />
-          </div>
-        </>
-      )}
 
       {!user && (
         <div className="ml-auto flex gap-4">

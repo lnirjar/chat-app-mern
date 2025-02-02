@@ -3,8 +3,10 @@ import asyncHandler from "express-async-handler";
 import createHttpError from "http-errors";
 
 import { User } from "../models/user.model";
+import { Workspace } from "../models/workspace.model";
 import { getLoginMethods, LoginMethods } from "../utils/loginMethods.utils";
 import { uploadAvatarToCloudinary } from "../utils/cloudinary.utils";
+import { MemberRole } from "../utils/constants";
 
 // @desc isEmailAvailable
 // @route GET /api/user/isEmailAvailable
@@ -51,6 +53,50 @@ export const getUser: RequestHandler<
   delete userObj.password;
 
   res.json({ user: userObj, loginMethods });
+});
+
+// @desc Get User and Workspace data
+// @route GET /api/user/data
+// @access Private
+export const getUserData: RequestHandler<
+  unknown,
+  {
+    user: User;
+    loginMethods: LoginMethods;
+    workspaces: (Omit<Workspace, "members"> & { role?: MemberRole })[];
+  },
+  unknown,
+  unknown
+> = asyncHandler(async (req, res) => {
+  const user = req.user;
+
+  if (!user) {
+    throw new createHttpError.InternalServerError("User not found");
+  }
+
+  const userObj = user.toObject();
+  const loginMethods = getLoginMethods(userObj);
+  delete userObj.googleId;
+  delete userObj.password;
+
+  const workspacesWithMemberCheck = await Workspace.find({
+    members: { $elemMatch: { user: user?._id } },
+  }).exec();
+
+  const workspacesWithUserRole = workspacesWithMemberCheck.map(
+    ({ _id, name, members, createdAt, updatedAt }) => {
+      const member = members.find(
+        (member) => member.user.toString() === user._id.toString(),
+      );
+      return { _id, name, createdAt, updatedAt, role: member?.role };
+    },
+  );
+
+  res.status(200).json({
+    user: userObj,
+    loginMethods,
+    workspaces: workspacesWithUserRole,
+  });
 });
 
 // @desc Update Avatar

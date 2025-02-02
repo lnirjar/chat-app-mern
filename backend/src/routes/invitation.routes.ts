@@ -6,6 +6,13 @@ import * as invitationController from "../controllers/invitation.controller";
 
 const router = Router();
 
+router
+  .route("/:invitationId/workspace")
+  .get(
+    invitationValidator.getWorkspaceNameForInvitation,
+    invitationController.getWorkspaceNameForInvitation,
+  );
+
 router.use(authMiddleware.isAuthenticated);
 
 router

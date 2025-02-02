@@ -1,6 +1,7 @@
 export const MEMBER = "member";
 export const OWNER = "owner";
 export const ADMIN = "admin";
+export type MemberRole = typeof MEMBER | typeof OWNER | typeof ADMIN;
 
 export const PUBLIC = "public";
 export const PRIVATE = "private";

@@ -59,6 +59,67 @@ export const createChat: RequestHandler<
   res.status(201).json({ chat });
 });
 
+// @desc Create DM
+// @route POST /api/chats/dm
+// @access Private
+export const createDM: RequestHandler<
+  unknown,
+  unknown,
+  {
+    workspaceId: string;
+    memberId: string;
+  },
+  unknown
+> = asyncHandler(async (req, res) => {
+  const user = req.user;
+  const { workspaceId, memberId } = req.body;
+
+  if (!user) {
+    throw new createHttpError.InternalServerError("User not found");
+  }
+
+  const [{ userIsMember }, { userIsMember: memberIsMember }] =
+    await Promise.all([
+      workspaceUtils.isUserMemberOfWorkspace(workspaceId, user),
+      workspaceUtils.isUserMemberOfWorkspace(workspaceId, { _id: memberId }),
+    ]);
+
+  if (!userIsMember || !memberIsMember) {
+    throw new createHttpError.Forbidden(
+      "Only the members of the workspace can chat with each other",
+    );
+  }
+
+  const existingDM = await Chat.findOne({
+    workspaceId,
+    chatType: DM,
+    members: {
+      $all: [
+        { $elemMatch: { user: user._id } },
+        { $elemMatch: { user: memberId } },
+      ],
+    },
+  });
+
+  if (existingDM) {
+    res.status(200).json({ chat: existingDM });
+    return;
+  }
+
+  const chat = await Chat.create({
+    workspaceId,
+    name: "DM",
+    visibility: PRIVATE,
+    chatType: DM,
+    members: [
+      { user: user._id, role: MEMBER },
+      { user: memberId, role: MEMBER },
+    ],
+  });
+
+  res.status(201).json({ chat });
+});
+
 // @desc Get Chat Details
 // @route GET /api/chats/:chatId
 // @access Private
@@ -75,10 +136,15 @@ export const getChatDetails: RequestHandler<
     throw new createHttpError.InternalServerError("User not found");
   }
 
-  const chat = await Chat.findById(chatId).exec();
+  const { userIsChatMember, chat } = await chatUtils.isUserMemberOfChat(
+    chatId,
+    user,
+  );
 
-  if (!chat) {
-    throw new createHttpError.NotFound("Chat not found");
+  if (!userIsChatMember && chat.visibility === PRIVATE) {
+    throw new createHttpError.Forbidden(
+      "Only the members of the chat can get the details of private chat",
+    );
   }
 
   const { workspaceId } = chat;
@@ -113,11 +179,14 @@ export const getChatMessages: RequestHandler<
     throw new createHttpError.InternalServerError("User not found");
   }
 
-  const { userIsChatMember } = await chatUtils.isUserMemberOfChat(chatId, user);
+  const { userIsChatMember, chat } = await chatUtils.isUserMemberOfChat(
+    chatId,
+    user,
+  );
 
-  if (!userIsChatMember) {
+  if (!userIsChatMember && chat.visibility === PRIVATE) {
     throw new createHttpError.Forbidden(
-      "Only the members of the chat can send or receive messages",
+      "Only the members of the chat can send or receive messages of private chats",
     );
   }
 

@@ -22,7 +22,7 @@ export const isUserOwnerOfWorkspace = async (
 
 export const isUserMemberOfWorkspace = async (
   workspaceId: Types.ObjectId | string,
-  user: Express.User,
+  user: Express.User | { _id: string },
 ) => {
   const workspace = await Workspace.findById(workspaceId).exec();
 

@@ -50,6 +50,41 @@ export const createChat: RequestHandler<
   next();
 });
 
+export const createDM: RequestHandler<
+  unknown,
+  unknown,
+  {
+    workspaceId: string;
+    memberId: string;
+  },
+  unknown
+> = asyncHandler(async (req, res, next) => {
+  const validationSchema = z.object({
+    workspaceId: z
+      .string({ message: "Workspace id is required" })
+      .trim()
+      .min(1, { message: "Workspace id is required" })
+      .max(50, {
+        message: "Workspace id can not contain more than 50 characters",
+      }),
+    memberId: z
+      .string({ message: "Member id is required" })
+      .trim()
+      .min(1, { message: "Member id is required" })
+      .max(50, {
+        message: "Member id can not contain more than 50 characters",
+      }),
+  });
+
+  const result = validationSchema.safeParse(req.body);
+
+  if (!result.success) {
+    throw new createHttpError.BadRequest(result.error.issues[0].message);
+  }
+
+  next();
+});
+
 export const getChatDetails: RequestHandler<
   { chatId: string },
   unknown,
