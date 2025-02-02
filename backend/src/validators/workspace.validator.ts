@@ -2,6 +2,7 @@ import { RequestHandler } from "express";
 import asyncHandler from "express-async-handler";
 import createHttpError from "http-errors";
 import { z } from "zod";
+import { ChatType, DM, GROUP } from "../utils/constants";
 
 export const createWorkspace: RequestHandler<
   unknown,
@@ -80,7 +81,7 @@ export const getChats: RequestHandler<
   { workspaceId: string },
   unknown,
   unknown,
-  unknown
+  { chatType: ChatType }
 > = asyncHandler(async (req, res, next) => {
   const validationSchema = z.object({
     workspaceId: z
@@ -90,9 +91,10 @@ export const getChats: RequestHandler<
       .max(50, {
         message: "Workspace id can not contain more than 50 characters",
       }),
+    chatType: z.enum([GROUP, DM]),
   });
 
-  const result = validationSchema.safeParse(req.params);
+  const result = validationSchema.safeParse({ ...req.params, ...req.query });
 
   if (!result.success) {
     throw new createHttpError.BadRequest(result.error.issues[0].message);

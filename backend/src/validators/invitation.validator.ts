@@ -42,6 +42,31 @@ export const createInvitation: RequestHandler<
   next();
 });
 
+export const getWorkspaceNameForInvitation: RequestHandler<
+  { invitationId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res, next) => {
+  const validationSchema = z.object({
+    invitationId: z
+      .string({ message: "Invitation id is required" })
+      .trim()
+      .min(1, { message: "Invitation id is required" })
+      .max(50, {
+        message: "Invitation id can not contain more than 50 characters",
+      }),
+  });
+
+  const result = validationSchema.safeParse(req.params);
+
+  if (!result.success) {
+    throw new createHttpError.BadRequest(result.error.issues[0].message);
+  }
+
+  next();
+});
+
 export const getInvitationDetails: RequestHandler<
   { invitationId: string },
   unknown,

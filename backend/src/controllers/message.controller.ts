@@ -5,7 +5,7 @@ import { Message } from "../models/message.model";
 import * as messageValidator from "../validators/message.validator";
 import * as chatUtils from "../utils/chat.utils";
 import { withErrorHandling } from "../utils/error.utils";
-import { RECEIVE_MESSAGE } from "../utils/constants";
+import { PRIVATE, RECEIVE_MESSAGE } from "../utils/constants";
 
 // @desc Send Message
 // @route Socket.io Event SEND_MESSAGE
@@ -24,14 +24,14 @@ export const sendMessage = withErrorHandling(
       throw new createHttpError.InternalServerError("User not found");
     }
 
-    const { userIsChatMember } = await chatUtils.isUserMemberOfChat(
+    const { userIsChatMember, chat } = await chatUtils.isUserMemberOfChat(
       chatId,
       user,
     );
 
-    if (!userIsChatMember) {
+    if (!userIsChatMember && chat.visibility === PRIVATE) {
       throw new createHttpError.Forbidden(
-        "Only the members of the chat can send or receive messages",
+        "Only the members of the private chat can send or receive messages",
       );
     }
 
@@ -59,14 +59,14 @@ export const joinChatRoom = withErrorHandling(
       throw new createHttpError.InternalServerError("User not found");
     }
 
-    const { userIsChatMember } = await chatUtils.isUserMemberOfChat(
+    const { userIsChatMember, chat } = await chatUtils.isUserMemberOfChat(
       chatId,
       user,
     );
 
-    if (!userIsChatMember) {
+    if (!userIsChatMember && chat.visibility === PRIVATE) {
       throw new createHttpError.Forbidden(
-        "Only the members of the chat can send or receive messages",
+        "Only the members of the private chat can send or receive messages",
       );
     }
 

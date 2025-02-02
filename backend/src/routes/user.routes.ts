@@ -31,6 +31,10 @@ router.use(authMiddleware.isAuthenticated);
 router.route("/").get(userValidator.getUser, userController.getUser);
 
 router
+  .route("/data")
+  .get(userValidator.getUserData, userController.getUserData);
+
+router
   .route("/avatar")
   .patch(
     upload.single("avatar"),

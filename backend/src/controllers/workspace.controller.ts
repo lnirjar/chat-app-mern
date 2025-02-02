@@ -7,6 +7,7 @@ import { Invitation } from "../models/invitation.model";
 import * as workspaceUtils from "../utils/workspace.utils";
 import * as invitationUtils from "../utils/invitation.utils";
 import { Chat } from "../models/chat.model";
+import { ChatType, PUBLIC } from "../utils/constants";
 
 // @desc Create Workspace
 // @route POST /api/workspaces
@@ -44,7 +45,7 @@ export const getWorkspace: RequestHandler<
     _id: workspaceId,
     members: { $elemMatch: { user: user?._id } },
   })
-    .populate("members.user", "name")
+    .populate("members.user")
     .exec();
 
   if (workspaceWithMemberCheck) {
@@ -119,7 +120,7 @@ export const updateWorkspaceName: RequestHandler<
 });
 
 // @desc Join a Workspace
-// @route GET /api/workspaces/join/:inviteId
+// @route POST /api/workspaces/join/:inviteId
 // @access Private
 export const joinWorkspace: RequestHandler<
   { inviteId: string },
@@ -149,7 +150,7 @@ export const joinWorkspace: RequestHandler<
     .exec();
 
   if (workspaceWithMemberCheck) {
-    res.status(304).json({
+    res.status(200).json({
       workspace: workspaceWithMemberCheck,
       message: "You are already a member of this workspace.",
     });
@@ -309,17 +310,18 @@ export const getInvitations: RequestHandler<
   res.status(200).json({ invitations });
 });
 
-// @desc Get Invitations for a Workspace
+// @desc Get Chats for a Workspace
 // @route GET /api/workspaces/:workspaceId/chats
 // @access Private
 export const getChats: RequestHandler<
   { workspaceId: string },
   unknown,
   unknown,
-  unknown
+  { chatType: ChatType }
 > = asyncHandler(async (req, res) => {
   const user = req.user;
   const { workspaceId } = req.params;
+  const { chatType } = req.query;
 
   if (!user) {
     throw new createHttpError.InternalServerError("User is required");
@@ -336,7 +338,16 @@ export const getChats: RequestHandler<
     );
   }
 
-  const chats = await Chat.find({ workspaceId }).exec();
+  const chats = await Chat.find({
+    workspaceId,
+    chatType,
+    $or: [
+      { visibility: PUBLIC },
+      { members: { $elemMatch: { user: user._id } } },
+    ],
+  })
+    .populate("members.user", "name")
+    .exec();
 
   res.status(200).json({ chats });
 });

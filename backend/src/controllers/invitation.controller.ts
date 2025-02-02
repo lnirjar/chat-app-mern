@@ -47,6 +47,28 @@ export const createInvitation: RequestHandler<
   res.status(201).json({ invitation });
 });
 
+// @desc Get Workspace Name for Invitation
+// @route GET /api/invitaitons/:invitationId/workspace
+// @access Public
+export const getWorkspaceNameForInvitation: RequestHandler<
+  { invitationId: string },
+  unknown,
+  unknown,
+  unknown
+> = asyncHandler(async (req, res) => {
+  const { invitationId } = req.params;
+
+  const invitation = await Invitation.findById(invitationId)
+    .populate("workspaceId", "name")
+    .exec();
+
+  if (!invitation) {
+    throw new createHttpError.NotFound("Invitation not found");
+  }
+
+  res.status(200).json({ invitation });
+});
+
 // @desc Get Invitation Details
 // @route GET /api/invitaitons/:invitationId
 // @access Private

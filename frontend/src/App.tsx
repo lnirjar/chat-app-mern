@@ -3,6 +3,7 @@ import { Navigate, Route, Routes } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 
 import { authActions } from "@/slices/authSlice";
+import { workspaceActions } from "@/slices/workspaceSlice";
 import { useUserDataQuery } from "@/hooks/useUserDataQuery";
 import { useAppDispatch, useAppSelector } from "@/hooks/react-redux-hooks";
 
@@ -15,6 +16,11 @@ import { LoginPage } from "@/pages/LoginPage";
 import { HomePage } from "@/pages/HomePage";
 import { SettingsPage } from "@/pages/SettingsPage";
 import { NotFoundPage } from "@/pages/NotFoundPage";
+import { WorkspaceInvitationsPage } from "@/pages/WorkspaceInvitationsPage";
+import { WorkspaceMembersPage } from "@/pages/WorkspaceMembersPage";
+import { WorkspaceSettingsPage } from "@/pages/WorkspaceSettingsPage";
+import { InvitePage } from "@/pages/InvitePage";
+import { ChatPage } from "@/pages/ChatPage";
 import { ProfileSettings } from "@/components/settings/ProfileSettings";
 import { AccountSettings } from "@/components/settings/AccountSettings";
 
@@ -23,7 +29,7 @@ function App() {
   const [flag, setFlag] = useState(false);
   const dispatch = useAppDispatch();
   const user = useAppSelector((state) => state.auth.user);
-  const { isLoading, data, isError, isSuccess, isFetching } =
+  const { isLoading, data, isError, isSuccess, isFetching, error } =
     useUserDataQuery(!flag);
 
   useEffect(() => {
@@ -33,6 +39,7 @@ function App() {
 
     if (isSuccess) {
       dispatch(authActions.setUser(data.data.user));
+      dispatch(workspaceActions.setAllWorkspaces(data.data.workspaces));
       setFlag(true);
     }
   }, [data, dispatch, isError, isSuccess]);
@@ -41,16 +48,73 @@ function App() {
     return <div>Loading..</div>;
   }
 
+  if (isError) {
+    console.log(error);
+  }
+
   return (
     <div>
       <Toaster />
-      <Navbar />
+      {!user && <Navbar />}
 
-      <div className="container px-16">
+      <div className="">
         <Routes>
-          <Route path="/" element={user ? <HomePage /> : <LandingPage />} />
+          <Route
+            path="/"
+            element={
+              user ? (
+                <RequireAuth>
+                  <HomePage />
+                </RequireAuth>
+              ) : (
+                <LandingPage />
+              )
+            }
+          >
+            <Route
+              path="/invitations"
+              element={
+                <RequireAuth>
+                  <WorkspaceInvitationsPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/members"
+              element={
+                <RequireAuth>
+                  <WorkspaceMembersPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/chats/:chatId"
+              element={
+                <RequireAuth>
+                  <ChatPage />
+                </RequireAuth>
+              }
+            />
+            <Route
+              path="/workspace/settings"
+              element={
+                <RequireAuth>
+                  <WorkspaceSettingsPage />
+                </RequireAuth>
+              }
+            />
+          </Route>
           <Route path="signup" element={<SignupPage />} />
           <Route path="login" element={<LoginPage />} />
+
+          <Route
+            path="/invite/:inviteId"
+            element={
+              <RequireAuth>
+                <InvitePage />
+              </RequireAuth>
+            }
+          />
 
           <Route
             path="settings"

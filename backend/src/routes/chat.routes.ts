@@ -9,6 +9,7 @@ const router = Router();
 router.use(authMiddleware.isAuthenticated);
 
 router.route("/").post(chatValidator.createChat, chatController.createChat);
+router.route("/dm").post(chatValidator.createDM, chatController.createDM);
 
 router
   .route("/:chatId")

@@ -3,6 +3,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import passport from "passport";
 import session from "express-session";
+import cors from "cors";
 
 import { errorHandler, notFound } from "./middlewares/error.middleware";
 import { format, morgan } from "./middlewares/morgan.middleware";
@@ -14,6 +15,10 @@ const app = express();
 
 if (process.env.NODE_ENV === "production") {
   app.set("trust proxy", true);
+}
+
+if (process.env.NODE_ENV !== "production") {
+  app.use(cors());
 }
 
 configurePassport(passport);
