@@ -1,7 +1,7 @@
 # Chat App (MERN)
 
 ## Live URL
-https://starter-mern-ts-jwt.onrender.com
+https://chat-app-mern-0pdu.onrender.com
 
 ## Tech Stack
 
