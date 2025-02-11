@@ -5,13 +5,17 @@ import {
 } from "@/components/ui/dialog";
 import { CreateWorkspaceForm } from "@/components/workspaces/CreateWorkspaceForm";
 
-export function CreateWorkspaceDialogContent() {
+export function CreateWorkspaceDialogContent({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   return (
     <DialogContent className="sm:max-w-[425px]">
       <DialogHeader>
         <DialogTitle>Create Workspace</DialogTitle>
       </DialogHeader>
-      <CreateWorkspaceForm />
+      <CreateWorkspaceForm setOpen={setOpen} />
     </DialogContent>
   );
 }

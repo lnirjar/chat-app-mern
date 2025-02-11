@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 
@@ -17,6 +18,7 @@ export const CreateDMForm = ({ memberId }: { memberId: string }) => {
     (state) => state.workspace.currentWorkspace,
   );
   const mutation = useCreateChatMutation();
+  const navigate = useNavigate();
 
   const createDM = () => {
     const result = mutation.mutateAsync(
@@ -30,6 +32,7 @@ export const CreateDMForm = ({ memberId }: { memberId: string }) => {
         onSuccess: (data) => {
           const chat = data.data.chat;
           dispatch(chatActions.addChat(chat));
+          navigate(`/chats/${chat._id}`);
         },
         onError: (error: ApiError) => {
           console.error(error);

@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CirclePlus } from "lucide-react";
 
 import {
@@ -18,8 +19,14 @@ import {
 import { CreateChatForm } from "@/components/chats/CreateChatForm";
 
 export function CreateChatDialog() {
+  const [open, setOpen] = useState(false);
+
+  const handleOpenchange = (open: boolean) => {
+    setOpen(open);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenchange}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
@@ -38,7 +45,7 @@ export function CreateChatDialog() {
         <DialogHeader>
           <DialogTitle>Create Chat</DialogTitle>
         </DialogHeader>
-        <CreateChatForm />
+        <CreateChatForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

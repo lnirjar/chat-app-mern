@@ -8,7 +8,7 @@ export const ProfileSettings = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h3>Profile</h3>
+        <h3 className="text-xl font-semibold">Profile</h3>
         <p className="text-sm text-muted-foreground">
           This is how others will see you on the site
         </p>

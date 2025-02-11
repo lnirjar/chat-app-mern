@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -32,12 +33,18 @@ const formSchema = z.object({
 
 export type CreateChatFormData = z.infer<typeof formSchema>;
 
-export const CreateChatForm = () => {
+export const CreateChatForm = ({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const dispatch = useAppDispatch();
   const currentWorkspace = useAppSelector(
     (state) => state.workspace.currentWorkspace,
   );
   const mutation = useCreateChatMutation();
+
+  const navigate = useNavigate();
 
   const form = useForm<CreateChatFormData>({
     resolver: zodResolver(formSchema),
@@ -65,6 +72,8 @@ export const CreateChatForm = () => {
         onSuccess: (data) => {
           const chat = data.data.chat;
           dispatch(chatActions.addChat(chat));
+          setOpen(false);
+          navigate(`/chats/${chat._id}`);
         },
         onError: (error: ApiError) => {
           console.error(error);

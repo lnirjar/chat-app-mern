@@ -25,6 +25,7 @@ export const SidebarNav = ({ className, items, ...props }: SidebarNavProps) => {
         <Link
           key={item.href}
           to={item.href}
+          replace
           className={cn(
             buttonVariants({ variant: "ghost" }),
             location.pathname === item.href

@@ -98,7 +98,7 @@ export function WorkspaceSwitcher() {
               </DialogTrigger>
             </DropdownMenuContent>
           </DropdownMenu>
-          <CreateWorkspaceDialogContent />
+          <CreateWorkspaceDialogContent setOpen={setOpen} />
         </Dialog>
       </SidebarMenuItem>
     </SidebarMenu>
