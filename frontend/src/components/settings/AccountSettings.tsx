@@ -6,7 +6,7 @@ export const AccountSettings = () => {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h3>Account</h3>
+        <h3 className="text-xl font-semibold">Account</h3>
         <p className="text-sm text-muted-foreground">
           Update your account settings
         </p>
