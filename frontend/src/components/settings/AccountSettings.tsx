@@ -1,6 +1,6 @@
 import { Separator } from "@/components/ui/separator";
 import { ChangePasswordForm } from "./ChangePasswordForm";
-import { DeleteAccountForm } from "./DeleteAccountForm";
+// import { DeleteAccountForm } from "./DeleteAccountForm";
 
 export const AccountSettings = () => {
   return (
@@ -13,7 +13,7 @@ export const AccountSettings = () => {
       </div>
       <Separator />
       <ChangePasswordForm />
-      <DeleteAccountForm />
+      {/* <DeleteAccountForm /> */}
     </div>
   );
 };
