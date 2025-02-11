@@ -1,8 +1,10 @@
 import { SidebarNav } from "@/components/SidebarNav";
+import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
 import { APP_NAME } from "@/lib/constants";
+import { ChevronLeft } from "lucide-react";
 import { Helmet } from "react-helmet";
-import { Outlet } from "react-router-dom";
+import { Outlet, useNavigate } from "react-router-dom";
 
 const sidebarNavItems = [
   {
@@ -16,14 +18,21 @@ const sidebarNavItems = [
 ];
 
 export const SettingsPage = () => {
+  const navigate = useNavigate();
+
   return (
-    <div>
+    <div className="p-8">
       <Helmet>
         <title>Settings | {APP_NAME}</title>
       </Helmet>
       <div className="mb-40">
         <div className="space-y-2">
-          <h1>Settings</h1>
+          <div className="flex gap-3 items-center">
+            <Button variant="outline" size="icon" onClick={() => navigate(-1)}>
+              <ChevronLeft />
+            </Button>
+            <h1 className="text-3xl font-semibold">Settings</h1>
+          </div>
           <p className="text-muted-foreground">
             Manage Your Account and Profile Settings
           </p>

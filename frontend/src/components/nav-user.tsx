@@ -1,7 +1,7 @@
 "use client";
 
 import { useNavigate } from "react-router-dom";
-import { ChevronsUpDown, LogOut, Settings, User } from "lucide-react";
+import { ChevronsUpDown, LogOut, Settings } from "lucide-react";
 import toast from "react-hot-toast";
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
@@ -70,10 +70,6 @@ export function NavUser() {
             </DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuGroup>
-              <DropdownMenuItem onClick={() => navigate("/profile")}>
-                <User className="mr-2 h-4 w-4" />
-                <span className="w-full">Profile</span>
-              </DropdownMenuItem>
               <DropdownMenuItem onClick={() => navigate("/settings")}>
                 <Settings className="mr-2 h-4 w-4" />
                 <span>Settings</span>
