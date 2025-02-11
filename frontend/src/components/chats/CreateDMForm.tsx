@@ -1,5 +1,6 @@
 import toast from "react-hot-toast";
 import { Send } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 import { Button } from "@/components/ui/button";
 
@@ -9,7 +10,6 @@ import { chatActions } from "@/slices/chatSlice";
 import { ApiError } from "@/config/axios";
 
 import { DM, TOAST_MESSAGES } from "@/lib/constants";
-import { useNavigate } from "react-router-dom";
 
 export const CreateDMForm = ({ memberId }: { memberId: string }) => {
   const dispatch = useAppDispatch();

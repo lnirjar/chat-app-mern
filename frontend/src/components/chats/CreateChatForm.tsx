@@ -2,6 +2,7 @@ import { useEffect } from "react";
 import toast from "react-hot-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
+import { useNavigate } from "react-router-dom";
 import { zodResolver } from "@hookform/resolvers/zod";
 
 import { Button } from "@/components/ui/button";
@@ -21,7 +22,6 @@ import { chatActions } from "@/slices/chatSlice";
 import { ApiError } from "@/config/axios";
 
 import { GROUP, TOAST_MESSAGES } from "@/lib/constants";
-import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   name: z

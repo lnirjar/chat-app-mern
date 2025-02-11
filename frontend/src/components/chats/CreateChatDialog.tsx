@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { CirclePlus } from "lucide-react";
 
 import {
@@ -16,7 +17,6 @@ import {
 } from "@/components/ui/tooltip";
 
 import { CreateChatForm } from "@/components/chats/CreateChatForm";
-import { useState } from "react";
 
 export function CreateChatDialog() {
   const [open, setOpen] = useState(false);
