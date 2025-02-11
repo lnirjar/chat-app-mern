@@ -21,6 +21,7 @@ import { chatActions } from "@/slices/chatSlice";
 import { ApiError } from "@/config/axios";
 
 import { GROUP, TOAST_MESSAGES } from "@/lib/constants";
+import { useNavigate } from "react-router-dom";
 
 const formSchema = z.object({
   name: z
@@ -32,12 +33,18 @@ const formSchema = z.object({
 
 export type CreateChatFormData = z.infer<typeof formSchema>;
 
-export const CreateChatForm = () => {
+export const CreateChatForm = ({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const dispatch = useAppDispatch();
   const currentWorkspace = useAppSelector(
     (state) => state.workspace.currentWorkspace,
   );
   const mutation = useCreateChatMutation();
+
+  const navigate = useNavigate();
 
   const form = useForm<CreateChatFormData>({
     resolver: zodResolver(formSchema),
@@ -65,6 +72,8 @@ export const CreateChatForm = () => {
         onSuccess: (data) => {
           const chat = data.data.chat;
           dispatch(chatActions.addChat(chat));
+          setOpen(false);
+          navigate(`/chats/${chat._id}`);
         },
         onError: (error: ApiError) => {
           console.error(error);

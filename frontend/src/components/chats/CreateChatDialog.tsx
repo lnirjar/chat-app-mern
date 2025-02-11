@@ -16,10 +16,17 @@ import {
 } from "@/components/ui/tooltip";
 
 import { CreateChatForm } from "@/components/chats/CreateChatForm";
+import { useState } from "react";
 
 export function CreateChatDialog() {
+  const [open, setOpen] = useState(false);
+
+  const handleOpenchange = (open: boolean) => {
+    setOpen(open);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={handleOpenchange}>
       <TooltipProvider>
         <Tooltip>
           <TooltipTrigger>
@@ -38,7 +45,7 @@ export function CreateChatDialog() {
         <DialogHeader>
           <DialogTitle>Create Chat</DialogTitle>
         </DialogHeader>
-        <CreateChatForm />
+        <CreateChatForm setOpen={setOpen} />
       </DialogContent>
     </Dialog>
   );

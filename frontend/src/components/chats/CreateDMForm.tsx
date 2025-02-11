@@ -9,6 +9,7 @@ import { chatActions } from "@/slices/chatSlice";
 import { ApiError } from "@/config/axios";
 
 import { DM, TOAST_MESSAGES } from "@/lib/constants";
+import { useNavigate } from "react-router-dom";
 
 export const CreateDMForm = ({ memberId }: { memberId: string }) => {
   const dispatch = useAppDispatch();
@@ -17,6 +18,7 @@ export const CreateDMForm = ({ memberId }: { memberId: string }) => {
     (state) => state.workspace.currentWorkspace,
   );
   const mutation = useCreateChatMutation();
+  const navigate = useNavigate();
 
   const createDM = () => {
     const result = mutation.mutateAsync(
@@ -30,6 +32,7 @@ export const CreateDMForm = ({ memberId }: { memberId: string }) => {
         onSuccess: (data) => {
           const chat = data.data.chat;
           dispatch(chatActions.addChat(chat));
+          navigate(`/chats/${chat._id}`);
         },
         onError: (error: ApiError) => {
           console.error(error);

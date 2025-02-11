@@ -32,7 +32,11 @@ const formSchema = z.object({
 
 export type CreateWorkspaceFormData = z.infer<typeof formSchema>;
 
-export const CreateWorkspaceForm = () => {
+export const CreateWorkspaceForm = ({
+  setOpen,
+}: {
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+}) => {
   const dispatch = useAppDispatch();
   const mutation = useCreateWorkspaceMutation();
 
@@ -56,6 +60,7 @@ export const CreateWorkspaceForm = () => {
       onSuccess: (data) => {
         const workspace = data.data.workspace;
         dispatch(workspaceActions.addWorkspace(workspace));
+        setOpen(false);
       },
       onError: (error: ApiError) => {
         console.error(error);
