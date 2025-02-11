@@ -40,7 +40,7 @@ export const CreateInvitationForm = () => {
   }
 
   return (
-    <div>
+    <div className="mt-4">
       <Button onClick={handleSubmit}>Create Invitation</Button>
     </div>
   );
