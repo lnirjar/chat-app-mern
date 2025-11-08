@@ -48,8 +48,6 @@ It supports **workspaces**, **group chats**, and **direct messages**, aiming to 
 - **TypeScript**
 - **Zod** for schema validation
 
----
-
 ## 📁 Folder Structure
 
 ```
