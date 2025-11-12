@@ -128,7 +128,3 @@ npm start
 ## 🚀 Deployment
 
 This project is deployed on Render.
-
-## 🖼️ Screenshots
-
-TODO: Screenshots here

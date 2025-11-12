@@ -4,6 +4,7 @@ import toast from "react-hot-toast";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { UserIcon } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -22,6 +23,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+
+import { CodeBlock } from "@/components/landing/code-block";
 
 import { useLoginMutation } from "@/hooks/useLoginMutation";
 import { useAppDispatch, useAppSelector } from "@/hooks/react-redux-hooks";
@@ -101,7 +104,14 @@ export const LoginPage = () => {
       <Helmet>
         <title>Login | {APP_NAME}</title>
       </Helmet>
+
       <div className="w-96 mx-auto my-8">
+        <section className="flex flex-col gap-1 max-w-sm my-4">
+          <h3 className="text-xl font-medium flex items-center gap-2">
+            <UserIcon /> Demo User
+          </h3>
+          <CodeBlock code={`Username: demo \nPassword: abc123`} />
+        </section>
         <Card>
           <CardHeader>
             <CardTitle>Login</CardTitle>
