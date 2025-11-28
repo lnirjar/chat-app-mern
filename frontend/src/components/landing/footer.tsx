@@ -6,7 +6,7 @@ export const Footer = () => {
         <a
           href="https://nirjar.com"
           target="_blank"
-          rel="noopener noreferrer"
+          rel="noopener"
           className="text-foreground hover:underline"
         >
           Nirjar Lohakare
